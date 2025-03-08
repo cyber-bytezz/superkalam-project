@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn DM Organizer</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 10px; width: 250px; }
+        .high { background-color: #ffcccc; padding: 5px; }
+        .low { background-color: #ccffcc; padding: 5px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <button id="classify-btn">Classify Messages</button>
+    <p id="results">Priority clearly displayed here!</p>
+
+    <button id="openSettings">⚙️ Settings</button>
+
+    <div id="settings" class="hidden">
+        <label>
+            <input type="checkbox" id="autoHide"> Auto-hide LOW priority messages
+        </label>
+        <button id="saveSettings">Save Settings</button>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
