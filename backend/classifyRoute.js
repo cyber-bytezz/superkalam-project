@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
@@ -7,6 +8,10 @@ router.post('/classify', async (req, res) => {
 
     if (!message) {
         return res.status(400).json({ error: "Message field is required!" });
+    }
+
+    if (!process.env.OPENROUTER_API_KEY) {
+        return res.status(500).json({ error: "Server misconfiguration: API key is missing." });
     }
 
     try {
@@ -19,31 +24,25 @@ router.post('/classify', async (req, res) => {
             body: JSON.stringify({
                 model: "openai/gpt-3.5-turbo",
                 messages: [
-                    { role: "system", content: "Classify LinkedIn DM as HIGH or LOW priority based on importance." },
+                    { role: "system", content: "Classify LinkedIn DM as HIGH or LOW." },
                     { role: "user", content: message }
                 ]
             })
         });
 
         const data = await response.json();
-        console.log("🔍 Full API Response:", JSON.stringify(data, null, 2));
+        console.log("✅ Full API Response:", data);
 
         if (data.error) {
             return res.status(400).json({ error: data.error.message });
         }
 
-        // ✅ **Check if `choices` exists before accessing**
-        const classification = data.choices?.[0]?.message?.content?.toUpperCase();
-
-        if (!classification) {
-            return res.status(400).json({ error: "Invalid AI response format!" });
-        }
-
-        res.json({ priority: classification.includes("LOW") ? "LOW" : "HIGH" });
+        const classification = data.choices?.[0]?.message?.content || "UNKNOWN";
+        res.json({ priority: classification });
 
     } catch (error) {
-        console.error("❌ API Error:", error);
-        res.status(500).json({ error: error.message });
+        console.error("❌ API Request Failed:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 

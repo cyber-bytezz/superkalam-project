@@ -2,23 +2,24 @@
     "manifest_version": 3,
     "name": "LinkedIn DM Organizer",
     "version": "1.0",
-    "permissions": [
-        "scripting",
-        "storage",
-        "activeTab"
-    ],
-    "host_permissions": [
-        "https://www.linkedin.com/messaging/*"
-    ],
+    "description": "Classifies LinkedIn messages as HIGH or LOW priority.",
+    "permissions": ["storage", "activeTab", "scripting", "tabs"],
     "background": {
-        "service_worker": "background.js"
+      "service_worker": "background.js"
     },
+    "host_permissions": [
+      "https://www.linkedin.com/*"
+    ],
     "action": {
-        "default_popup": "popup.html",
-        "default_icon": {
-            "16": "icon.png",
-            "48": "icon.png",
-            "128": "icon.png"
-        }
-    }
-}
+      "default_popup": "popup.html",
+      "default_icon": "icon.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://www.linkedin.com/messaging/*"],
+        "js": ["content-script.js"],
+        "run_at": "document_idle"
+      }
+    ]
+  }
+  
